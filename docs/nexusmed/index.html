@@ -1,0 +1,532 @@
+
+
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Med - Documentação Oficial da API</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .code-block {
+            background-color: #1e293b;
+            color: #f8fafc;
+        }
+        .sidebar-link.active {
+            color: #2563eb;
+            font-weight: 600;
+            border-left-color: #2563eb;
+            background-color: #eff6ff;
+        }
+        .sidebar-link {
+            transition: all 0.2s;
+            border-left: 4px solid transparent;
+        }
+        pre code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="bg-gray-50 text-slate-800">
+
+    <!-- Mobile Header -->
+    <header class="md:hidden fixed top-0 left-0 right-0 bg-white border-b border-slate-200 z-50 flex items-center justify-between px-4 py-3 h-16 shadow-sm">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
+                <span class="text-white font-bold text-xs italic">NM</span>
+            </div>
+            <span class="font-bold text-slate-900 tracking-tight">Nexus Med</span>
+        </div>
+        <button id="mobile-menu-toggle" class="p-2 text-slate-600">
+            <i data-lucide="menu" id="menu-icon"></i>
+            <i data-lucide="x" id="close-icon" class="hidden"></i>
+        </button>
+    </header>
+
+    <div class="flex flex-col md:flex-row">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-72 bg-white border-r border-slate-200 transform -translate-x-full transition-transform duration-300 md:translate-x-0">
+            <div class="hidden md:flex items-center gap-3 px-8 py-10 h-24">
+                <div class="w-10 h-10 bg-blue-600 rounded flex items-center justify-center shadow-lg shadow-blue-200">
+                    <span class="text-white font-bold text-lg italic">NM</span>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-slate-900 leading-tight tracking-tight">Nexus Med</h1>
+                    <p class="text-[10px] uppercase font-bold text-blue-600 tracking-widest">Healthcare API</p>
+                </div>
+            </div>
+
+            <nav class="mt-4 px-4 space-y-1 overflow-y-auto max-h-[calc(100vh-160px)] pb-24 md:pb-0">
+                <a href="#visao-geral" class="sidebar-link active w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">
+                    <i data-lucide="book-open" class="w-4 h-4"></i> 1. Visão Geral
+                </a>
+                <a href="#base-url" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">
+                    <i data-lucide="link-2" class="w-4 h-4"></i> 2. Base URL
+                </a>
+                <a href="#seguranca" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i> 3. Segurança e Autenticação
+                </a>
+                <a href="#inbound" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">
+                    <i data-lucide="arrow-right-circle" class="w-4 h-4"></i> 4. Integração Inbound (Entrada de Dados)
+                </a>
+                <a href="#outbound" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">
+                    <i data-lucide="arrow-left-circle" class="w-4 h-4"></i> 5. Integração Outbound (Saída de Dados)
+                </a>
+                <a href="#respostas" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">
+                    <i data-lucide="list-checks" class="w-4 h-4"></i> 6. Respostas HTTP
+                </a>
+                <a href="#logs" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">
+                    <i data-lucide="file-text" class="w-4 h-4"></i> 7. Logs e Auditoria
+                </a>
+                <a href="#boas-praticas" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">
+                    <i data-lucide="code" class="w-4 h-4"></i> 8. Boas Práticas
+                </a>
+                <a href="#versionamento" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">
+                    <i data-lucide="git-branch" class="w-4 h-4"></i> 9. Versionamento
+                </a>
+                <a href="#suporte" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">
+                    <i data-lucide="help-circle" class="w-4 h-4"></i> 10. Suporte
+                </a>
+            </nav>
+
+            <div class="absolute bottom-0 left-0 right-0 p-6 bg-slate-50 border-t border-slate-200">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Status</span>
+                    <span class="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full ring-1 ring-emerald-200">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Produção
+                    </span>
+                </div>
+                <p class="text-xs text-slate-500">v1.2.0-stable</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 md:ml-72 bg-white min-h-screen relative">
+            <!-- Desktop Header Overlay -->
+            <div class="hidden md:block sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200 px-8 py-4 h-16">
+                <div class="flex justify-between items-center max-w-4xl mx-auto">
+                    <div class="flex items-center gap-2 text-sm text-slate-500">
+                        <span class="font-medium text-slate-900">Documentação</span>
+                        <span class="text-slate-300">/</span>
+                        <span>API Reference</span>
+                    </div>
+                    <div class="flex gap-4">
+                        <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" class="text-xs font-semibold text-blue-600 flex items-center gap-1 hover:underline">
+                            Portal do Desenvolvedor <i data-lucide="external-link" class="w-3 h-3"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-4xl mx-auto px-6 py-12 md:px-12 md:py-16 pt-24 md:pt-16">
+                <header class="mb-16">
+                    <div class="inline-block px-3 py-1 bg-blue-50 text-blue-600 text-xs font-bold rounded-full mb-4 ring-1 ring-blue-100">
+                        API v1 – OFICIAL
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 tracking-tight">
+                        Nexus Med API <span class="text-slate-400 font-light">Documentação</span>
+                    </h1>
+                    <p class="text-lg text-slate-600 leading-relaxed max-w-2xl">
+                        Integre sua clínica ou sistema hospitalar ao ecossistema Nexus Med. Nossa API robusta e escalável permite a sincronização em tempo real de pacientes, prontuários e dados clínicos.
+                    </p>
+                </header>
+
+                <!-- 1. Visão Geral -->
+                <section id="visao-geral" class="mb-20 pt-24 -mt-16">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2 flex items-center gap-2">
+                        <i data-lucide="book-open" class="text-blue-600"></i> 1. Visão Geral
+                    </h2>
+                    <div class="prose prose-slate max-w-none text-slate-600 leading-relaxed space-y-4">
+                        <p>
+                            A API do Nexus Med permite a integração bidirecional entre o sistema de prontuário eletrônico e ecossistemas externos de saúde (ERPs, Agendas, BI e Faturamento).
+                        </p>
+                        <h4 class="font-bold text-slate-900 mt-6">Casos de Uso</h4>
+                        <ul class="list-disc ml-5 space-y-2">
+                            <li><strong>Inbound:</strong> Sincronização automática de dados de pacientes provenientes de sistemas externos.</li>
+                            <li><strong>Outbound:</strong> Exportação manual de prontuários para sistemas de faturamento ou auditoria.</li>
+                        </ul>
+                        <div class="bg-blue-50 p-6 rounded-xl border border-blue-100 flex gap-4 mt-8">
+                            <div class="text-blue-600 shrink-0"><i data-lucide="book-open"></i></div>
+                            <div>
+                                <h4 class="font-bold text-blue-900 mb-1">Interoperabilidade</h4>
+                                <p class="text-sm text-blue-800">Garantimos a comunicação eficiente entre plataformas para otimizar o fluxo de atendimento médico e administrativo.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. Base URL -->
+                <section id="base-url" class="mb-20 pt-24 -mt-16">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2 flex items-center gap-2">
+                        <i data-lucide="link-2" class="text-blue-600"></i> 2. Base URL
+                    </h2>
+                    <div class="space-y-4">
+                        <p class="text-slate-600">O ambiente de produção está acessível através da seguinte URL base:</p>
+                        <div class="bg-slate-900 p-5 rounded-lg border border-slate-700 font-mono text-blue-400 select-all shadow-xl overflow-x-auto">
+                            https://api.iacomunica.com.br/nexusmed/v1
+                        </div>
+                        <div class="flex items-start gap-3 mt-4 text-sm text-amber-700 bg-amber-50 p-4 rounded-lg border border-amber-100">
+                            <div class="shrink-0 pt-0.5"><i data-lucide="help-circle" class="w-4 h-4"></i></div>
+                            <p><strong>Observação:</strong> Todos os endpoints descritos nesta documentação partem desta URL base. É mandatório o uso de HTTPS para todas as requisições.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. Segurança -->
+                <section id="seguranca" class="mb-20 pt-24 -mt-16">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2 flex items-center gap-2">
+                        <i data-lucide="shield-check" class="text-blue-600"></i> 3. Segurança e Autenticação
+                    </h2>
+                    <div class="prose prose-slate text-slate-600 leading-relaxed space-y-4">
+                        <p>
+                            A autenticação é baseada em credenciais exclusivas por integração. Não há OAuth2 nem JWT nesta versão.
+                        </p>
+                        <h4 class="text-lg font-semibold text-slate-900 mt-6">Headers Obrigatórios (Inbound)</h4>
+                        <div class="overflow-hidden border border-slate-200 rounded-xl shadow-sm mt-4 overflow-x-auto">
+                            <table class="w-full text-sm text-left border-collapse min-w-[500px]">
+                                <thead>
+                                    <tr class="bg-slate-50 border-b border-slate-200">
+                                        <th class="px-4 py-3 font-bold text-slate-700">Header</th>
+                                        <th class="px-4 py-3 font-bold text-slate-700">Tipo</th>
+                                        <th class="px-4 py-3 font-bold text-slate-700">Obrigatório</th>
+                                        <th class="px-4 py-3 font-bold text-slate-700">Descrição</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    <tr>
+                                        <td class="px-4 py-3 font-mono text-blue-600">x-routing-key</td>
+                                        <td class="px-4 py-3">UUID</td>
+                                        <td class="px-4 py-3">Sim</td>
+                                        <td class="px-4 py-3 italic">Identificador único do médico/clínica</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 font-mono text-blue-600">x-webhook-secret</td>
+                                        <td class="px-4 py-3">String</td>
+                                        <td class="px-4 py-3">Sim</td>
+                                        <td class="px-4 py-3 italic">Chave secreta da integração</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 font-mono text-blue-600">Content-Type</td>
+                                        <td class="px-4 py-3">String</td>
+                                        <td class="px-4 py-3">Sim</td>
+                                        <td class="px-4 py-3 italic">Deve ser application/json</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="bg-rose-50 p-6 rounded-xl border border-rose-100 flex gap-4 mt-8">
+                            <div class="text-rose-600 shrink-0"><i data-lucide="shield-check"></i></div>
+                            <div>
+                                <h4 class="font-bold text-rose-900 mb-1 italic">IMPORTANTE: Gestão de Segredos</h4>
+                                <ul class="text-sm text-rose-800 list-disc ml-4 space-y-1">
+                                    <li>A <strong>x-webhook-secret</strong> é exibida uma única vez no momento da criação da integração.</li>
+                                    <li>Se perdida, é necessário criar uma nova integração.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. Inbound -->
+                <section id="inbound" class="mb-20 pt-24 -mt-16">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2 flex items-center gap-2">
+                        <i data-lucide="arrow-right-circle" class="text-blue-600"></i> 4. Integração Inbound (Entrada de Dados)
+                    </h2>
+                    <div class="prose prose-slate text-slate-600 space-y-4">
+                        <p>Utilize este endpoint para o recebimento de pacientes provenientes de sistemas externos.</p>
+                        
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="bg-emerald-600 text-white px-3 py-1 rounded font-bold text-xs uppercase">POST</span>
+                            <code class="text-sm font-bold bg-slate-100 px-2 py-1 rounded">/integrations/inbound/patients</code>
+                        </div>
+
+                        <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 mb-6">
+                            <h5 class="font-bold text-slate-900 mb-2">Regra de Negócio (Upsert):</h5>
+                            <p class="text-sm leading-relaxed">
+                                O endpoint <code>/integrations/inbound/patients</code> opera exclusivamente com lógica de <strong>upsert automático</strong>.
+                                <br /><br />
+                                Não existem endpoints separados para criação ou atualização de pacientes.
+                                <br /><br />
+                                Cada requisição <code>POST</code> é processada da seguinte forma:
+                                <br />
+                                • Se não houver um paciente cadastrado com o mesmo <code>external_id</code> para o médico informado, um novo registro é criado.
+                                <br />
+                                • Se já existir, os dados do paciente são atualizados automaticamente.
+                                <br /><br />
+                                A unicidade do paciente é garantida pela combinação do <code>external_id</code> com a credencial do médico (<code>x-routing-key</code>).
+                            </p>
+                        </div>
+
+                        <h5 class="font-bold text-slate-900 mb-2 uppercase text-xs tracking-widest">Exemplo de Payload Oficial</h5>
+                        <div class="relative group my-4">
+                            <div class="absolute top-2 right-3 text-xs text-slate-400 font-mono uppercase tracking-wider">json</div>
+                            <pre class="code-block p-4 rounded-lg overflow-x-auto text-sm leading-relaxed font-mono shadow-inner border border-slate-700"><code>{
+  "event_type": "patient.created",
+  "origin_source": "erp_clinico",
+  "patient": {
+    "external_id": "EXT-1001",
+    "full_name": "João da Silva",
+    "phone": "11987654321",
+    "cpf": "12345678900",
+    "birth_date": "1980-05-12",
+    "email": "joao.silva@email.com"
+  }
+}</code></pre>
+                        </div>
+
+                        <div class="flex items-start gap-3 mt-4 text-sm text-amber-700 bg-amber-50 p-4 rounded-lg border border-amber-100">
+                            <div class="shrink-0 pt-0.5"><i data-lucide="help-circle" class="w-4 h-4"></i></div>
+                            <p><strong>Atenção:</strong> Não adicionar campos extras como metadata, doctor, plano, convênio ou gênero.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. Outbound -->
+                <section id="outbound" class="mb-20 pt-24 -mt-16">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2 flex items-center gap-2">
+                        <i data-lucide="arrow-left-circle" class="text-blue-600"></i> 5. Integração Outbound (Saída de Dados)
+                    </h2>
+                    <div class="prose prose-slate text-slate-600 space-y-6">
+                        <p>Fluxo para o envio de prontuários e dados clínicos do Nexus Med para sistemas externos.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="border border-slate-200 p-5 rounded-lg">
+                                <h6 class="font-bold text-slate-900 mb-2">Gatilho</h6>
+                                <p class="text-sm">Ação manual do médico através do botão "Exportar Prontuário".</p>
+                            </div>
+                            <div class="border border-slate-200 p-5 rounded-lg">
+                                <h6 className="font-bold text-slate-900 mb-2">Evento</h6>
+                                <p className="text-sm">O payload enviado conterá o evento <code>medical_record.exported</code>.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                            <h5 class="font-bold text-slate-900 mb-2">Requisitos de Sucesso:</h5>
+                            <ul class="text-sm space-y-2 list-disc ml-5">
+                                <li>O sistema externo deve retornar qualquer resposta <strong>HTTP 2xx</strong> para confirmar o sucesso.</li>
+                                <li>A estrutura do payload outbound pode evoluir, mantendo compatibilidade.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. Respostas HTTP -->
+                <section id="respostas" class="mb-20 pt-24 -mt-16">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2 flex items-center gap-2">
+                        <i data-lucide="list-checks" class="text-blue-600"></i> 6. Respostas HTTP
+                    </h2>
+                    <div class="overflow-hidden border border-slate-200 rounded-xl shadow-sm overflow-x-auto">
+                        <table class="w-full text-sm text-left border-collapse min-w-[500px]">
+                            <thead class="bg-slate-50">
+                                <tr>
+                                    <th class="px-6 py-4 font-bold text-slate-700">Código</th>
+                                    <th class="px-6 py-4 font-bold text-slate-700">Significado</th>
+                                    <th class="px-6 py-4 font-bold text-slate-700">Descrição</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr>
+                                    <td class="px-6 py-4"><span class="text-emerald-600 font-bold">200 / 201</span></td>
+                                    <td class="px-6 py-4 font-medium text-slate-900">Sucesso</td>
+                                    <td class="px-6 py-4 text-slate-500 italic">Requisição processada.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4"><span class="text-amber-600 font-bold">400</span></td>
+                                    <td class="px-6 py-4 font-medium text-slate-900">Bad Request</td>
+                                    <td class="px-6 py-4 text-slate-500 italic">Payload inválido.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4"><span class="text-rose-600 font-bold">401</span></td>
+                                    <td class="px-6 py-4 font-medium text-slate-900">Unauthorized</td>
+                                    <td class="px-6 py-4 text-slate-500 italic">Credenciais inválidas.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4"><span class="text-rose-700 font-bold">403</span></td>
+                                    <td class="px-6 py-4 font-medium text-slate-900">Forbidden</td>
+                                    <td class="px-6 py-4 text-slate-500 italic">Integração desativada.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4"><span class="text-slate-900 font-bold">500</span></td>
+                                    <td class="px-6 py-4 font-medium text-slate-900">Server Error</td>
+                                    <td class="px-6 py-4 text-slate-500 italic">Falha interna.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 7. Logs -->
+                <section id="logs" class="mb-20 pt-24 -mt-16">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2 flex items-center gap-2">
+                        <i data-lucide="file-text" class="text-blue-600"></i> 7. Logs e Auditoria
+                    </h2>
+                    <div class="prose prose-slate text-slate-600 space-y-4">
+                        <p>Todas as transações são registradas na tabela <code>integration_events</code>, permitindo:</p>
+                        <ul class="grid grid-cols-1 md:grid-cols-3 gap-4 list-none p-0">
+                            <li class="bg-slate-50 p-4 rounded-lg border border-slate-100 text-xs text-center font-semibold uppercase tracking-wider text-slate-500 shadow-sm">Auditoria</li>
+                            <li class="bg-slate-50 p-4 rounded-lg border border-slate-100 text-xs text-center font-semibold uppercase tracking-wider text-slate-500 shadow-sm">Rastreabilidade</li>
+                            <li class="bg-slate-50 p-4 rounded-lg border border-slate-100 text-xs text-center font-semibold uppercase tracking-wider text-slate-500 shadow-sm">Depuração</li>
+                        </ul>
+                        <p>Acesse o painel para visualizar o histórico de eventos e identificar possíveis erros de integração.</p>
+                    </div>
+                </section>
+
+                <!-- 8. Boas Práticas -->
+                <section id="boas-praticas" class="mb-20 pt-24 -mt-16">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2 flex items-center gap-2">
+                        <i data-lucide="code" class="text-blue-600"></i> 8. Boas Práticas
+                    </h2>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="flex gap-4 p-5 rounded-lg border border-slate-200 hover:border-blue-200 hover:bg-blue-50/30 transition-colors duration-200">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 shrink-0 font-bold text-sm">1</div>
+                            <div>
+                                <h5 class="font-bold text-slate-900 mb-1">Segurança de Credenciais</h5>
+                                <p class="text-sm text-slate-600 leading-relaxed">Mantenha a x-routing-key protegida e nunca a exponha em código client-side ou repositórios públicos.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 p-5 rounded-lg border border-slate-200 hover:border-blue-200 hover:bg-blue-50/30 transition-colors duration-200">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 shrink-0 font-bold text-sm">2</div>
+                            <div>
+                                <h5 class="font-bold text-slate-900 mb-1">Tratamento de Erros</h5>
+                                <p class="text-sm text-slate-600 leading-relaxed">Implemente retentativas para erros de rede, mas respeite códigos de erro 4xx que indicam problemas no payload.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 p-5 rounded-lg border border-slate-200 hover:border-blue-200 hover:bg-blue-50/30 transition-colors duration-200">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 shrink-0 font-bold text-sm">3</div>
+                            <div>
+                                <h5 class="font-bold text-slate-900 mb-1">Processamento de Webhooks</h5>
+                                <p class="text-sm text-slate-600 leading-relaxed">Sempre retorne 2xx rapidamente e processe a carga útil em segundo plano para não travar a conexão.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 p-5 rounded-lg border border-slate-200 hover:border-blue-200 hover:bg-blue-50/30 transition-colors duration-200">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 shrink-0 font-bold text-sm">4</div>
+                            <div>
+                                <h5 class="font-bold text-slate-900 mb-1">Imutabilidade de IDs</h5>
+                                <p class="text-sm text-slate-600 leading-relaxed">Use external_id de forma consistente para evitar a criação de registros duplicados para o mesmo paciente.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 9. Versionamento -->
+                <section id="versionamento" class="mb-20 pt-24 -mt-16">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2 flex items-center gap-2">
+                        <i data-lucide="git-branch" class="text-blue-600"></i> 9. Versionamento
+                    </h2>
+                    <div class="prose prose-slate text-slate-600 space-y-4">
+                        <p>Esta documentação refere-se à versão <strong>v1</strong> da API Nexus Med. O versionamento é mantido via path na URL base.</p>
+                        <ul class="list-disc ml-5 space-y-2">
+                            <li><strong>Compatibilidade:</strong> Mudanças incrementais não quebrarão integrações existentes.</li>
+                            <li><strong>Avisos:</strong> Novas versões serão comunicadas via newsletter técnica.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- 10. Suporte -->
+                <section id="suporte" class="mb-20 pt-24 -mt-16">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2 flex items-center gap-2">
+                        <i data-lucide="help-circle" class="text-blue-600"></i> 10. Suporte
+                    </h2>
+                    <div class="bg-slate-900 text-white p-8 rounded-2xl shadow-2xl relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-10 text-slate-800 opacity-20">
+                            <i data-lucide="help-circle" style="width: 120px; height: 120px;"></i>
+                        </div>
+                        <div class="relative z-10">
+                            <h3 class="text-2xl font-bold mb-4">Suporte Técnico</h3>
+                            <p class="text-slate-300 mb-8 max-w-lg leading-relaxed">
+                                Para dúvidas técnicas utilize o painel do Nexus Med ou entre em contato com a equipe responsável pela integração.
+                            </p>
+                            <div class="flex flex-col sm:flex-row gap-4">
+                                <button class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg font-bold transition-all shadow-lg flex items-center justify-center gap-2">
+                                    Abrir Chamado <i data-lucide="external-link" class="w-4 h-4"></i>
+                                </button>
+                                <button class="bg-slate-800 hover:bg-slate-700 text-white px-6 py-3 rounded-lg font-bold border border-slate-700 transition-all flex items-center justify-center gap-2">
+                                    Painel de Controle
+                                </button>
+                            </div>
+                            <p class="mt-8 text-xs text-slate-400 italic">
+                                Ambiente de suporte disponível de segunda a sexta, das 09h às 18h.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <footer class="mt-32 pt-12 border-t border-slate-200 text-center text-slate-400 text-sm">
+                    <p>&copy; <span id="current-year"></span> Nexus Med - Tecnologia para Saúde. Todos os direitos reservados.</p>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Mobile Menu Logic
+        const mobileToggle = document.getElementById('mobile-menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const menuIcon = document.getElementById('menu-icon');
+        const closeIcon = document.getElementById('close-icon');
+
+        mobileToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+            menuIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        });
+
+        // Close sidebar when clicking links on mobile
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 768) {
+                    sidebar.classList.add('-translate-x-full');
+                    menuIcon.classList.remove('hidden');
+                    closeIcon.classList.add('hidden');
+                }
+            });
+        });
+
+        // Scrollspy Logic
+        const sections = document.querySelectorAll('section[id]');
+        window.addEventListener('scroll', () => {
+            let current = "";
+            const scrollPos = window.scrollY + 120;
+
+            sections.forEach((section) => {
+                const sectionTop = section.offsetTop;
+                if (scrollPos >= sectionTop) {
+                    current = section.getAttribute("id");
+                }
+            });
+
+            sidebarLinks.forEach((link) => {
+                link.classList.remove("active");
+                if (link.getAttribute("href").includes(current)) {
+                    link.classList.add("active");
+                }
+            });
+        });
+
+        // Current Year
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
