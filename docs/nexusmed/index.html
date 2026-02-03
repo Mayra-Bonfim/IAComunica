@@ -1,283 +1,567 @@
-
-
 <!DOCTYPE html>
-<html lang="pt-BR" class="scroll-smooth">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus Med - Documentação Oficial da API</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        /* CSS Reset e Variáveis */
+        :root {
+            --blue-50: #eff6ff;
+            --blue-100: #dbeafe;
+            --blue-200: #bfdbfe;
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            --blue-700: #1d4ed8;
+            --blue-900: #1e3a8a;
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-300: #cbd5e1;
+            --slate-400: #94a3b8;
+            --slate-500: #64748b;
+            --slate-600: #475569;
+            --slate-700: #334155;
+            --slate-800: #1e293b;
+            --slate-900: #0f172a;
+            --emerald-50: #ecfdf5;
+            --emerald-200: #a7f3d0;
+            --emerald-500: #10b981;
+            --emerald-600: #059669;
+            --rose-50: #fff1f2;
+            --rose-100: #ffe4e6;
+            --rose-600: #e11d48;
+            --rose-700: #be123c;
+            --rose-900: #881337;
+            --amber-50: #fffbeb;
+            --amber-100: #fef3c7;
+            --amber-600: #d97706;
+            --amber-700: #b45309;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            background-color: var(--slate-50);
+            color: var(--slate-700);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
-        .code-block {
-            background-color: #1e293b;
-            color: #f8fafc;
+
+        /* Layout */
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-3 { gap: 0.75rem; }
+        .gap-4 { gap: 1rem; }
+
+        /* Mobile Header */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: white;
+            border-bottom: 1px solid var(--slate-200);
+            z-index: 50;
+            padding: 0 1rem;
+            align-items: center;
+            justify-content: space-between;
         }
-        .sidebar-link.active {
-            color: #2563eb;
-            font-weight: 600;
-            border-left-color: #2563eb;
-            background-color: #eff6ff;
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 288px;
+            background: white;
+            border-right: 1px solid var(--slate-200);
+            z-index: 40;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
         }
+
+        .sidebar-brand {
+            padding: 2.5rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-box {
+            width: 40px;
+            height: 40px;
+            background: var(--blue-600);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-style: italic;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+
+        .brand-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--slate-900);
+            letter-spacing: -0.025em;
+        }
+
+        .sidebar-nav {
+            padding: 0 1rem;
+        }
+
         .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.625rem 1rem;
+            text-decoration: none;
+            color: var(--slate-600);
+            font-size: 0.875rem;
+            border-radius: 6px;
+            margin-bottom: 0.25rem;
             transition: all 0.2s;
             border-left: 4px solid transparent;
         }
-        pre code {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+        .sidebar-link:hover {
+            background: var(--slate-50);
+            color: var(--slate-900);
         }
+
+        .sidebar-link.active {
+            background: var(--blue-50);
+            color: var(--blue-600);
+            font-weight: 600;
+            border-left-color: var(--blue-600);
+        }
+
+        .sidebar-link svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2;
+        }
+
+        /* Main Content */
+        main {
+            margin-left: 288px;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .top-nav {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--slate-200);
+            height: 64px;
+            z-index: 30;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .breadcrumb {
+            font-size: 0.875rem;
+            color: var(--slate-500);
+        }
+
+        .breadcrumb strong {
+            color: var(--slate-900);
+        }
+
+        .container {
+            max-width: 896px;
+            margin: 0 auto;
+            padding: 4rem 3rem;
+        }
+
+        /* Typography */
+        h1 { font-size: 3rem; font-weight: 800; color: var(--slate-900); margin-bottom: 1.5rem; letter-spacing: -0.05em; }
+        h1 span { color: var(--slate-400); font-weight: 300; }
+        h2 { font-size: 1.5rem; font-weight: 700; color: var(--slate-900); margin-bottom: 1.5rem; border-bottom: 1px solid var(--slate-200); padding-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; margin-top: 4rem; scroll-margin-top: 5rem; }
+        h4 { font-size: 1.125rem; font-weight: 600; color: var(--slate-900); margin: 1.5rem 0 0.5rem; }
+        p { color: var(--slate-600); margin-bottom: 1rem; font-size: 1.125rem; }
+        code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.875rem; background: var(--slate-100); padding: 0.2rem 0.4rem; border-radius: 4px; color: var(--slate-900); }
+
+        .badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; margin-bottom: 1rem; border: 1px solid transparent; }
+        .badge-blue { background: var(--blue-50); color: var(--blue-600); border-color: var(--blue-100); }
+        .badge-green { background: #10b981; color: white; text-transform: uppercase; border-radius: 4px; padding: 0.2rem 0.5rem; }
+
+        /* Code Blocks */
+        .relative { position: relative; }
+        .code-container {
+            background-color: var(--slate-800);
+            border: 1px solid var(--slate-700);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-container pre {
+            color: #f8fafc;
+            font-family: ui-monospace, SFMono-Regular, monospace;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .code-header {
+            position: absolute;
+            top: 0.5rem;
+            right: 3rem;
+            font-size: 0.75rem;
+            color: var(--slate-400);
+            text-transform: uppercase;
+            font-family: monospace;
+            pointer-events: none;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: transparent;
+            border: none;
+            color: var(--slate-400);
+            cursor: pointer;
+            padding: 0.4rem;
+            border-radius: 4px;
+            transition: color 0.2s;
+        }
+
+        .copy-btn:hover { color: white; }
+        .copy-btn svg { width: 16px; height: 16px; }
+
+        /* Tables */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--slate-200);
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+            text-align: left;
+            min-width: 600px;
+        }
+
+        th { background: var(--slate-50); padding: 0.75rem 1rem; font-weight: 700; color: var(--slate-700); border-bottom: 1px solid var(--slate-200); }
+        td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--slate-100); }
+        tr:last-child td { border-bottom: none; }
+
+        /* Helpers & Alerts */
+        .alert { display: flex; gap: 1rem; padding: 1.5rem; border-radius: 12px; margin: 2rem 0; border: 1px solid transparent; }
+        .alert-blue { background: var(--blue-50); border-color: var(--blue-100); }
+        .alert-amber { background: var(--amber-50); border-color: var(--amber-100); color: var(--amber-700); }
+        .alert-rose { background: var(--rose-50); border-color: var(--rose-100); color: var(--rose-900); }
+        .alert-icon { color: var(--blue-600); flex-shrink: 0; }
+        .alert-amber .alert-icon { color: var(--amber-600); }
+        .alert-rose .alert-icon { color: var(--rose-600); }
+        .alert h4 { margin-top: 0; color: inherit; }
+        .alert p { margin-bottom: 0; font-size: 0.875rem; color: inherit; opacity: 0.9; }
+
+        /* List Grid */
+        .list-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin: 2rem 0; }
+        .list-item { display: flex; gap: 1rem; padding: 1.25rem; border: 1px solid var(--slate-200); border-radius: 8px; transition: border-color 0.2s; }
+        .list-item:hover { border-color: var(--blue-200); background: rgba(37, 99, 235, 0.02); }
+        .item-number { width: 32px; height: 32px; background: var(--blue-100); color: var(--blue-600); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.875rem; flex-shrink: 0; }
+        .item-content h5 { font-weight: 700; color: var(--slate-900); margin-bottom: 0.25rem; }
+        .item-content p { font-size: 0.875rem; color: var(--slate-600); margin: 0; }
+
+        /* Support Section */
+        .support-divider { height: 1px; background: var(--slate-200); width: 100%; margin: 8rem 0 4rem; }
+        .support-card {
+            background: var(--slate-900);
+            color: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            ring: 1px solid var(--slate-800);
+            margin-bottom: 4rem;
+        }
+
+        .support-bg-icon {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            color: var(--slate-800);
+            opacity: 0.2;
+            width: 140px;
+            height: 140px;
+            pointer-events: none;
+        }
+
+        .support-card h3 { font-size: 1.875rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: -0.025em; }
+        .support-card p { color: var(--slate-300); font-size: 1.125rem; margin-bottom: 2rem; max-width: 32rem; }
+        .support-card .footer-note { border-top: 1px solid var(--slate-800); padding-top: 1.5rem; margin-top: 2.5rem; font-size: 0.875rem; font-style: italic; color: var(--slate-400); }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--blue-600);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.2s;
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn:hover { background: var(--blue-500); transform: translateY(-1px); }
+
+        footer { padding: 3rem 0; border-top: 1px solid var(--slate-200); text-align: center; color: var(--slate-400); font-size: 0.875rem; margin-top: 8rem; }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .mobile-header { display: flex; }
+            .sidebar { transform: translateX(-100%); width: 80%; max-width: 300px; }
+            .sidebar.open { transform: translateX(0); }
+            main { margin-left: 0; padding-top: 64px; }
+            .top-nav { display: none; }
+            .container { padding: 2rem 1.5rem; }
+            h1 { font-size: 2.25rem; }
+            .support-card { padding: 1.5rem; }
+            .support-bg-icon { width: 80px; height: 80px; }
+        }
+
+        /* Utils */
+        .txt-blue { color: var(--blue-600); }
+        .txt-emerald { color: var(--emerald-600); }
+        .txt-amber { color: var(--amber-600); }
+        .txt-rose { color: var(--rose-600); }
+        .txt-bold { font-weight: 700; }
+        .txt-mono { font-family: monospace; }
+        .txt-italic { font-style: italic; }
+        .mb-0 { margin-bottom: 0; }
+        .mt-0 { margin-top: 0; }
     </style>
-<script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
-    "react/": "https://esm.sh/react@^19.2.3/"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
 </head>
-<body class="bg-gray-50 text-slate-800">
+<body>
 
     <!-- Mobile Header -->
-    <header class="md:hidden fixed top-0 left-0 right-0 bg-white border-b border-slate-200 z-50 flex items-center justify-between px-4 py-3 h-16 shadow-sm">
+    <header class="mobile-header">
         <div class="flex items-center gap-2">
-            <div class="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
-                <span class="text-white font-bold text-xs italic">NM</span>
-            </div>
-            <span class="font-bold text-slate-900 tracking-tight">Nexus Med</span>
+            <div class="logo-box" style="width: 32px; height: 32px; font-size: 12px;">NM</div>
+            <span class="brand-name" style="font-size: 1rem;">Nexus Med</span>
         </div>
-        <button id="mobile-menu-toggle" class="p-2 text-slate-600">
-            <i data-lucide="menu" id="menu-icon"></i>
-            <i data-lucide="x" id="close-icon" class="hidden"></i>
+        <button id="menu-toggle" style="background:none; border:none; color: var(--slate-600); padding: 8px; cursor: pointer;">
+            <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg>
+            <svg id="close-icon" style="display:none;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
         </button>
     </header>
 
-    <div class="flex flex-col md:flex-row">
-        <!-- Sidebar -->
-        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-72 bg-white border-r border-slate-200 transform -translate-x-full transition-transform duration-300 md:translate-x-0">
-            <div class="hidden md:flex items-center gap-3 px-8 py-10 h-24">
-                <div class="w-10 h-10 bg-blue-600 rounded flex items-center justify-center shadow-lg shadow-blue-200">
-                    <span class="text-white font-bold text-lg italic">NM</span>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold text-slate-900 leading-tight tracking-tight">Nexus Med</h1>
-                    <p class="text-[10px] uppercase font-bold text-blue-600 tracking-widest">Healthcare API</p>
-                </div>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="logo-box">NM</div>
+            <h1 class="brand-name" style="margin:0;">Nexus Med</h1>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#visao-geral" class="sidebar-link active">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h9z"></path></svg>
+                1. Visão Geral
+            </a>
+            <a href="#base-url" class="sidebar-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                2. Base URL
+            </a>
+            <a href="#seguranca" class="sidebar-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                3. Segurança
+            </a>
+            <a href="#inbound" class="sidebar-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v8"></path><path d="m8 12 4 4 4-4"></path></svg>
+                4. Inbound
+            </a>
+            <a href="#outbound" class="sidebar-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16V8"></path><path d="m16 12-4-4-4 4"></path></svg>
+                5. Outbound
+            </a>
+            <a href="#respostas" class="sidebar-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                6. Respostas HTTP
+            </a>
+            <a href="#logs" class="sidebar-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" x2="8" y1="13" y2="13"></line><line x1="16" x2="8" y1="17" y2="17"></line><line x1="10" x2="8" y1="9" y2="9"></line></svg>
+                7. Logs
+            </a>
+            <a href="#boas-praticas" class="sidebar-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                8. Boas Práticas
+            </a>
+            <a href="#versionamento" class="sidebar-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="6" y1="3" y2="15"></line><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><path d="M18 9a9 9 0 0 1-9 9"></path></svg>
+                9. Versionamento
+            </a>
+            <a href="#suporte" class="sidebar-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" x2="12.01" y1="17" y2="17"></line></svg>
+                10. Suporte
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+        <div class="top-nav">
+            <div class="breadcrumb">
+                <strong>Documentação</strong> / <span>API Reference</span>
             </div>
+        </div>
 
-            <nav class="mt-4 px-4 space-y-1 overflow-y-auto max-h-[calc(100vh-160px)] pb-24 md:pb-0">
-                <a href="#visao-geral" class="sidebar-link active w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">
-                    <i data-lucide="book-open" class="w-4 h-4"></i> 1. Visão Geral
-                </a>
-                <a href="#base-url" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">
-                    <i data-lucide="link-2" class="w-4 h-4"></i> 2. Base URL
-                </a>
-                <a href="#seguranca" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">
-                    <i data-lucide="shield-check" class="w-4 h-4"></i> 3. Segurança e Autenticação
-                </a>
-                <a href="#inbound" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">
-                    <i data-lucide="arrow-right-circle" class="w-4 h-4"></i> 4. Integração Inbound (Entrada de Dados)
-                </a>
-                <a href="#outbound" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">
-                    <i data-lucide="arrow-left-circle" class="w-4 h-4"></i> 5. Integração Outbound (Saída de Dados)
-                </a>
-                <a href="#respostas" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">
-                    <i data-lucide="list-checks" class="w-4 h-4"></i> 6. Respostas HTTP
-                </a>
-                <a href="#logs" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">
-                    <i data-lucide="file-text" class="w-4 h-4"></i> 7. Logs e Auditoria
-                </a>
-                <a href="#boas-praticas" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">
-                    <i data-lucide="code" class="w-4 h-4"></i> 8. Boas Práticas
-                </a>
-                <a href="#versionamento" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">
-                    <i data-lucide="git-branch" class="w-4 h-4"></i> 9. Versionamento
-                </a>
-                <a href="#suporte" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">
-                    <i data-lucide="help-circle" class="w-4 h-4"></i> 10. Suporte
-                </a>
-            </nav>
+        <div class="container">
+            <header style="margin-bottom: 4rem;">
+                <div class="badge badge-blue">API v1 – OFICIAL</div>
+                <h1>Nexus Med API <span>Documentação</span></h1>
+                <p>Integre sua clínica ou sistema hospitalar ao ecossistema Nexus Med. Nossa API robusta e escalável permite a sincronização em tempo real de pacientes, prontuários e dados clínicos.</p>
+            </header>
 
-            <div class="absolute bottom-0 left-0 right-0 p-6 bg-slate-50 border-t border-slate-200">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Status</span>
-                    <span class="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full ring-1 ring-emerald-200">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        Produção
-                    </span>
-                </div>
-                <p class="text-xs text-slate-500">v1.2.0-stable</p>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="flex-1 md:ml-72 bg-white min-h-screen relative">
-            <!-- Desktop Header Overlay -->
-            <div class="hidden md:block sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200 px-8 py-4 h-16">
-                <div class="flex justify-between items-center max-w-4xl mx-auto">
-                    <div class="flex items-center gap-2 text-sm text-slate-500">
-                        <span class="font-medium text-slate-900">Documentação</span>
-                        <span class="text-slate-300">/</span>
-                        <span>API Reference</span>
-                    </div>
-                    <div class="flex gap-4">
-                        <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" class="text-xs font-semibold text-blue-600 flex items-center gap-1 hover:underline">
-                            Portal do Desenvolvedor <i data-lucide="external-link" class="w-3 h-3"></i>
-                        </a>
+            <!-- 1. Visão Geral -->
+            <section id="visao-geral">
+                <h2>
+                    <svg class="txt-blue" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h9z"></path></svg>
+                    1. Visão Geral
+                </h2>
+                <p>A API do Nexus Med permite a integração bidirecional entre o sistema de prontuário eletrônico e ecossistemas externos de saúde (ERPs, Agendas, BI e Faturamento).</p>
+                <h4>Casos de Uso</h4>
+                <ul style="margin-left: 1.5rem; color: var(--slate-600);">
+                    <li style="margin-bottom: 0.5rem;"><span class="txt-bold">Inbound:</span> Sincronização automática de dados de pacientes provenientes de sistemas externos.</li>
+                    <li><span class="txt-bold">Outbound:</span> Exportação manual de prontuários para sistemas de faturamento ou auditoria.</li>
+                </ul>
+                <div class="alert alert-blue" style="margin-top: 2rem;">
+                    <div class="alert-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h9z"></path></svg></div>
+                    <div>
+                        <h4 class="mb-0" style="color: var(--blue-900);">Interoperabilidade</h4>
+                        <p style="font-size: 0.875rem; color: var(--blue-700);">Garantimos a comunicação eficiente entre plataformas para otimizar o fluxo de atendimento médico e administrativo.</p>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="max-w-4xl mx-auto px-6 py-12 md:px-12 md:py-16 pt-24 md:pt-16">
-                <header class="mb-16">
-                    <div class="inline-block px-3 py-1 bg-blue-50 text-blue-600 text-xs font-bold rounded-full mb-4 ring-1 ring-blue-100">
-                        API v1 – OFICIAL
+            <!-- 2. Base URL -->
+            <section id="base-url">
+                <h2>
+                    <svg class="txt-blue" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                    2. Base URL
+                </h2>
+                <p>O ambiente de produção está acessível através da seguinte URL base:</p>
+                <div class="relative">
+                    <div class="code-container" style="background: var(--slate-900); color: var(--blue-500); padding-right: 4rem;">
+                        <pre id="base-url-text">https://api.iacomunica.com.br/nexusmed/v1</pre>
+                        <button class="copy-btn" onclick="copyToClipboard('base-url-text', this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        </button>
                     </div>
-                    <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 tracking-tight">
-                        Nexus Med API <span class="text-slate-400 font-light">Documentação</span>
-                    </h1>
-                    <p class="text-lg text-slate-600 leading-relaxed max-w-2xl">
-                        Integre sua clínica ou sistema hospitalar ao ecossistema Nexus Med. Nossa API robusta e escalável permite a sincronização em tempo real de pacientes, prontuários e dados clínicos.
-                    </p>
-                </header>
+                </div>
+                <div class="alert alert-amber">
+                    <div class="alert-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" x2="12.01" y1="17" y2="17"></line></svg></div>
+                    <p><span class="txt-bold">Observação:</span> Todos os endpoints descritos nesta documentação partem desta URL base. É mandatório o uso de HTTPS para todas as requisições.</p>
+                </div>
+            </section>
 
-                <!-- 1. Visão Geral -->
-                <section id="visao-geral" class="mb-20 pt-24 -mt-16">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2 flex items-center gap-2">
-                        <i data-lucide="book-open" class="text-blue-600"></i> 1. Visão Geral
-                    </h2>
-                    <div class="prose prose-slate max-w-none text-slate-600 leading-relaxed space-y-4">
-                        <p>
-                            A API do Nexus Med permite a integração bidirecional entre o sistema de prontuário eletrônico e ecossistemas externos de saúde (ERPs, Agendas, BI e Faturamento).
-                        </p>
-                        <h4 class="font-bold text-slate-900 mt-6">Casos de Uso</h4>
-                        <ul class="list-disc ml-5 space-y-2">
-                            <li><strong>Inbound:</strong> Sincronização automática de dados de pacientes provenientes de sistemas externos.</li>
-                            <li><strong>Outbound:</strong> Exportação manual de prontuários para sistemas de faturamento ou auditoria.</li>
+            <!-- 3. Segurança -->
+            <section id="seguranca">
+                <h2>
+                    <svg class="txt-blue" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                    3. Segurança e Autenticação
+                </h2>
+                <p>A autenticação é baseada em credenciais exclusivas por integração. Não há OAuth2 nem JWT nesta versão.</p>
+                <h4>Headers Obrigatórios (Inbound)</h4>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Header</th>
+                                <th>Tipo</th>
+                                <th>Obrigatório</th>
+                                <th>Descrição</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="txt-mono txt-blue">x-routing-key</td>
+                                <td>UUID</td>
+                                <td>Sim</td>
+                                <td class="txt-italic">Identificador único do médico/clínica</td>
+                            </tr>
+                            <tr>
+                                <td class="txt-mono txt-blue">x-webhook-secret</td>
+                                <td>String</td>
+                                <td>Sim</td>
+                                <td class="txt-italic">Chave secreta da integração</td>
+                            </tr>
+                            <tr>
+                                <td class="txt-mono txt-blue">Content-Type</td>
+                                <td>String</td>
+                                <td>Sim</td>
+                                <td class="txt-italic">Deve ser application/json</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="alert alert-rose">
+                    <div class="alert-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg></div>
+                    <div>
+                        <h4 class="mb-0 txt-italic">IMPORTANTE: Gestão de Segredos</h4>
+                        <ul style="margin-left: 1rem; font-size: 0.875rem;">
+                            <li>A <span class="txt-bold">x-webhook-secret</span> é exibida uma única vez no momento da criação da integração.</li>
+                            <li>Se perdida, é necessário criar uma nova integração.</li>
                         </ul>
-                        <div class="bg-blue-50 p-6 rounded-xl border border-blue-100 flex gap-4 mt-8">
-                            <div class="text-blue-600 shrink-0"><i data-lucide="book-open"></i></div>
-                            <div>
-                                <h4 class="font-bold text-blue-900 mb-1">Interoperabilidade</h4>
-                                <p class="text-sm text-blue-800">Garantimos a comunicação eficiente entre plataformas para otimizar o fluxo de atendimento médico e administrativo.</p>
-                            </div>
-                        </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <!-- 2. Base URL -->
-                <section id="base-url" class="mb-20 pt-24 -mt-16">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2 flex items-center gap-2">
-                        <i data-lucide="link-2" class="text-blue-600"></i> 2. Base URL
-                    </h2>
-                    <div class="space-y-4">
-                        <p class="text-slate-600">O ambiente de produção está acessível através da seguinte URL base:</p>
-                        <div class="bg-slate-900 p-5 rounded-lg border border-slate-700 font-mono text-blue-400 select-all shadow-xl overflow-x-auto">
-                            https://api.iacomunica.com.br/nexusmed/v1
-                        </div>
-                        <div class="flex items-start gap-3 mt-4 text-sm text-amber-700 bg-amber-50 p-4 rounded-lg border border-amber-100">
-                            <div class="shrink-0 pt-0.5"><i data-lucide="help-circle" class="w-4 h-4"></i></div>
-                            <p><strong>Observação:</strong> Todos os endpoints descritos nesta documentação partem desta URL base. É mandatório o uso de HTTPS para todas as requisições.</p>
-                        </div>
+            <!-- 4. Inbound -->
+            <section id="inbound">
+                <h2>
+                    <svg class="txt-blue" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v8"></path><path d="m8 12 4 4 4-4"></path></svg>
+                    4. Integração Inbound
+                </h2>
+                <p>Utilize este endpoint para o recebimento de pacientes provenientes de sistemas externos.</p>
+                <div class="flex items-center gap-2" style="margin-bottom: 1rem;">
+                    <span class="badge-green">POST</span>
+                    <code class="txt-bold">/integrations/inbound/patients</code>
+                </div>
+                <div class="alert alert-blue" style="background: var(--slate-100); border-color: var(--slate-200); color: var(--slate-700);">
+                    <div>
+                        <h5 class="txt-bold" style="margin-bottom: 0.5rem; color: var(--slate-900);">Regra de Negócio (Upsert):</h5>
+                        <p style="font-size: 0.875rem;">O endpoint opera exclusivamente com lógica de <span class="txt-bold">upsert automático</span>. Cada requisição POST processa o seguinte: Se não houver paciente com o <span class="txt-bold">external_id</span>, cria-se um novo; se existir, atualiza-se os dados.</p>
                     </div>
-                </section>
-
-                <!-- 3. Segurança -->
-                <section id="seguranca" class="mb-20 pt-24 -mt-16">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2 flex items-center gap-2">
-                        <i data-lucide="shield-check" class="text-blue-600"></i> 3. Segurança e Autenticação
-                    </h2>
-                    <div class="prose prose-slate text-slate-600 leading-relaxed space-y-4">
-                        <p>
-                            A autenticação é baseada em credenciais exclusivas por integração. Não há OAuth2 nem JWT nesta versão.
-                        </p>
-                        <h4 class="text-lg font-semibold text-slate-900 mt-6">Headers Obrigatórios (Inbound)</h4>
-                        <div class="overflow-hidden border border-slate-200 rounded-xl shadow-sm mt-4 overflow-x-auto">
-                            <table class="w-full text-sm text-left border-collapse min-w-[500px]">
-                                <thead>
-                                    <tr class="bg-slate-50 border-b border-slate-200">
-                                        <th class="px-4 py-3 font-bold text-slate-700">Header</th>
-                                        <th class="px-4 py-3 font-bold text-slate-700">Tipo</th>
-                                        <th class="px-4 py-3 font-bold text-slate-700">Obrigatório</th>
-                                        <th class="px-4 py-3 font-bold text-slate-700">Descrição</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-slate-100">
-                                    <tr>
-                                        <td class="px-4 py-3 font-mono text-blue-600">x-routing-key</td>
-                                        <td class="px-4 py-3">UUID</td>
-                                        <td class="px-4 py-3">Sim</td>
-                                        <td class="px-4 py-3 italic">Identificador único do médico/clínica</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-3 font-mono text-blue-600">x-webhook-secret</td>
-                                        <td class="px-4 py-3">String</td>
-                                        <td class="px-4 py-3">Sim</td>
-                                        <td class="px-4 py-3 italic">Chave secreta da integração</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-3 font-mono text-blue-600">Content-Type</td>
-                                        <td class="px-4 py-3">String</td>
-                                        <td class="px-4 py-3">Sim</td>
-                                        <td class="px-4 py-3 italic">Deve ser application/json</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="bg-rose-50 p-6 rounded-xl border border-rose-100 flex gap-4 mt-8">
-                            <div class="text-rose-600 shrink-0"><i data-lucide="shield-check"></i></div>
-                            <div>
-                                <h4 class="font-bold text-rose-900 mb-1 italic">IMPORTANTE: Gestão de Segredos</h4>
-                                <ul class="text-sm text-rose-800 list-disc ml-4 space-y-1">
-                                    <li>A <strong>x-webhook-secret</strong> é exibida uma única vez no momento da criação da integração.</li>
-                                    <li>Se perdida, é necessário criar uma nova integração.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 4. Inbound -->
-                <section id="inbound" class="mb-20 pt-24 -mt-16">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2 flex items-center gap-2">
-                        <i data-lucide="arrow-right-circle" class="text-blue-600"></i> 4. Integração Inbound (Entrada de Dados)
-                    </h2>
-                    <div class="prose prose-slate text-slate-600 space-y-4">
-                        <p>Utilize este endpoint para o recebimento de pacientes provenientes de sistemas externos.</p>
-                        
-                        <div class="flex items-center gap-3 mb-4">
-                            <span class="bg-emerald-600 text-white px-3 py-1 rounded font-bold text-xs uppercase">POST</span>
-                            <code class="text-sm font-bold bg-slate-100 px-2 py-1 rounded">/integrations/inbound/patients</code>
-                        </div>
-
-                        <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 mb-6">
-                            <h5 class="font-bold text-slate-900 mb-2">Regra de Negócio (Upsert):</h5>
-                            <p class="text-sm leading-relaxed">
-                                O endpoint <code>/integrations/inbound/patients</code> opera exclusivamente com lógica de <strong>upsert automático</strong>.
-                                <br /><br />
-                                Não existem endpoints separados para criação ou atualização de pacientes.
-                                <br /><br />
-                                Cada requisição <code>POST</code> é processada da seguinte forma:
-                                <br />
-                                • Se não houver um paciente cadastrado com o mesmo <code>external_id</code> para o médico informado, um novo registro é criado.
-                                <br />
-                                • Se já existir, os dados do paciente são atualizados automaticamente.
-                                <br /><br />
-                                A unicidade do paciente é garantida pela combinação do <code>external_id</code> com a credencial do médico (<code>x-routing-key</code>).
-                            </p>
-                        </div>
-
-                        <h5 class="font-bold text-slate-900 mb-2 uppercase text-xs tracking-widest">Exemplo de Payload Oficial</h5>
-                        <div class="relative group my-4">
-                            <div class="absolute top-2 right-3 text-xs text-slate-400 font-mono uppercase tracking-wider">json</div>
-                            <pre class="code-block p-4 rounded-lg overflow-x-auto text-sm leading-relaxed font-mono shadow-inner border border-slate-700"><code>{
+                </div>
+                <h4>Exemplo de Requisição</h4>
+                <div class="relative">
+                    <div class="code-header">json</div>
+                    <div class="code-container">
+                        <pre id="json-inbound">{
   "event_type": "patient.created",
   "origin_source": "erp_clinico",
   "patient": {
@@ -288,238 +572,237 @@
     "birth_date": "1980-05-12",
     "email": "joao.silva@email.com"
   }
-}</code></pre>
-                        </div>
+}</pre>
+                        <button class="copy-btn" onclick="copyToClipboard('json-inbound', this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
 
-                        <div class="flex items-start gap-3 mt-4 text-sm text-amber-700 bg-amber-50 p-4 rounded-lg border border-amber-100">
-                            <div class="shrink-0 pt-0.5"><i data-lucide="help-circle" class="w-4 h-4"></i></div>
-                            <p><strong>Atenção:</strong> Não adicionar campos extras como metadata, doctor, plano, convênio ou gênero.</p>
+            <!-- 5. Outbound -->
+            <section id="outbound">
+                <h2>
+                    <svg class="txt-blue" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16V8"></path><path d="m16 12-4-4-4 4"></path></svg>
+                    5. Integração Outbound
+                </h2>
+                <p>Fluxo para o envio de prontuários e dados clínicos do Nexus Med para sistemas externos.</p>
+                <div class="list-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                    <div class="list-item">
+                        <div class="item-content">
+                            <h5>Gatilho</h5>
+                            <p>Ação manual do médico através do botão "Exportar Prontuário".</p>
                         </div>
                     </div>
-                </section>
-
-                <!-- 5. Outbound -->
-                <section id="outbound" class="mb-20 pt-24 -mt-16">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2 flex items-center gap-2">
-                        <i data-lucide="arrow-left-circle" class="text-blue-600"></i> 5. Integração Outbound (Saída de Dados)
-                    </h2>
-                    <div class="prose prose-slate text-slate-600 space-y-6">
-                        <p>Fluxo para o envio de prontuários e dados clínicos do Nexus Med para sistemas externos.</p>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="border border-slate-200 p-5 rounded-lg">
-                                <h6 class="font-bold text-slate-900 mb-2">Gatilho</h6>
-                                <p class="text-sm">Ação manual do médico através do botão "Exportar Prontuário".</p>
-                            </div>
-                            <div class="border border-slate-200 p-5 rounded-lg">
-                                <h6 className="font-bold text-slate-900 mb-2">Evento</h6>
-                                <p className="text-sm">O payload enviado conterá o evento <code>medical_record.exported</code>.</p>
-                            </div>
-                        </div>
-
-                        <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
-                            <h5 class="font-bold text-slate-900 mb-2">Requisitos de Sucesso:</h5>
-                            <ul class="text-sm space-y-2 list-disc ml-5">
-                                <li>O sistema externo deve retornar qualquer resposta <strong>HTTP 2xx</strong> para confirmar o sucesso.</li>
-                                <li>A estrutura do payload outbound pode evoluir, mantendo compatibilidade.</li>
-                            </ul>
+                    <div class="list-item">
+                        <div class="item-content">
+                            <h5>Evento</h5>
+                            <p>O payload enviado conterá o evento <code>medical_record.exported</code>.</p>
                         </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <!-- 6. Respostas HTTP -->
-                <section id="respostas" class="mb-20 pt-24 -mt-16">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2 flex items-center gap-2">
-                        <i data-lucide="list-checks" class="text-blue-600"></i> 6. Respostas HTTP
-                    </h2>
-                    <div class="overflow-hidden border border-slate-200 rounded-xl shadow-sm overflow-x-auto">
-                        <table class="w-full text-sm text-left border-collapse min-w-[500px]">
-                            <thead class="bg-slate-50">
-                                <tr>
-                                    <th class="px-6 py-4 font-bold text-slate-700">Código</th>
-                                    <th class="px-6 py-4 font-bold text-slate-700">Significado</th>
-                                    <th class="px-6 py-4 font-bold text-slate-700">Descrição</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100">
-                                <tr>
-                                    <td class="px-6 py-4"><span class="text-emerald-600 font-bold">200 / 201</span></td>
-                                    <td class="px-6 py-4 font-medium text-slate-900">Sucesso</td>
-                                    <td class="px-6 py-4 text-slate-500 italic">Requisição processada.</td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4"><span class="text-amber-600 font-bold">400</span></td>
-                                    <td class="px-6 py-4 font-medium text-slate-900">Bad Request</td>
-                                    <td class="px-6 py-4 text-slate-500 italic">Payload inválido.</td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4"><span class="text-rose-600 font-bold">401</span></td>
-                                    <td class="px-6 py-4 font-medium text-slate-900">Unauthorized</td>
-                                    <td class="px-6 py-4 text-slate-500 italic">Credenciais inválidas.</td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4"><span class="text-rose-700 font-bold">403</span></td>
-                                    <td class="px-6 py-4 font-medium text-slate-900">Forbidden</td>
-                                    <td class="px-6 py-4 text-slate-500 italic">Integração desativada.</td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4"><span class="text-slate-900 font-bold">500</span></td>
-                                    <td class="px-6 py-4 font-medium text-slate-900">Server Error</td>
-                                    <td class="px-6 py-4 text-slate-500 italic">Falha interna.</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
+            <!-- 6. Respostas HTTP -->
+            <section id="respostas">
+                <h2>
+                    <svg class="txt-blue" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                    6. Respostas HTTP
+                </h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Significado</th>
+                                <th>Descrição</th>
+                                <th>Exemplo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="txt-bold txt-emerald">200 / 201</span></td>
+                                <td class="txt-bold">Sucesso</td>
+                                <td class="txt-italic">Processada com sucesso.</td>
+                                <td><code>{"success": true}</code></td>
+                            </tr>
+                            <tr>
+                                <td><span class="txt-bold txt-amber">400</span></td>
+                                <td class="txt-bold">Bad Request</td>
+                                <td class="txt-italic">Payload inválido.</td>
+                                <td><code>{"error": "Missing fields"}</code></td>
+                            </tr>
+                            <tr>
+                                <td><span class="txt-bold txt-rose">401</span></td>
+                                <td class="txt-bold">Unauthorized</td>
+                                <td class="txt-italic">Credenciais inválidas.</td>
+                                <td><code>{"error": "Unauthorized"}</code></td>
+                            </tr>
+                            <tr>
+                                <td><span class="txt-bold txt-rose" style="color: var(--rose-900);">403</span></td>
+                                <td class="txt-bold">Forbidden</td>
+                                <td class="txt-italic">Integração desativada.</td>
+                                <td><code>{"error": "Forbidden"}</code></td>
+                            </tr>
+                            <tr>
+                                <td><span class="txt-bold" style="color: var(--slate-900);">500</span></td>
+                                <td class="txt-bold">Server Error</td>
+                                <td class="txt-italic">Falha interna.</td>
+                                <td><code>{"error": "Internal Error"}</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
 
-                <!-- 7. Logs -->
-                <section id="logs" class="mb-20 pt-24 -mt-16">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2 flex items-center gap-2">
-                        <i data-lucide="file-text" class="text-blue-600"></i> 7. Logs e Auditoria
-                    </h2>
-                    <div class="prose prose-slate text-slate-600 space-y-4">
-                        <p>Todas as transações são registradas na tabela <code>integration_events</code>, permitindo:</p>
-                        <ul class="grid grid-cols-1 md:grid-cols-3 gap-4 list-none p-0">
-                            <li class="bg-slate-50 p-4 rounded-lg border border-slate-100 text-xs text-center font-semibold uppercase tracking-wider text-slate-500 shadow-sm">Auditoria</li>
-                            <li class="bg-slate-50 p-4 rounded-lg border border-slate-100 text-xs text-center font-semibold uppercase tracking-wider text-slate-500 shadow-sm">Rastreabilidade</li>
-                            <li class="bg-slate-50 p-4 rounded-lg border border-slate-100 text-xs text-center font-semibold uppercase tracking-wider text-slate-500 shadow-sm">Depuração</li>
-                        </ul>
-                        <p>Acesse o painel para visualizar o histórico de eventos e identificar possíveis erros de integração.</p>
-                    </div>
-                </section>
+            <!-- 7. Logs -->
+            <section id="logs">
+                <h2>
+                    <svg class="txt-blue" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" x2="8" y1="13" y2="13"></line><line x1="16" x2="8" y1="17" y2="17"></line><line x1="10" x2="8" y1="9" y2="9"></line></svg>
+                    7. Logs e Auditoria
+                </h2>
+                <p>Todas as transações são registradas na tabela <code>integration_events</code>, permitindo:</p>
+                <div class="flex gap-4" style="flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 150px; background: var(--slate-100); padding: 1rem; border-radius: 8px; text-align: center; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--slate-500);">Auditoria</div>
+                    <div style="flex: 1; min-width: 150px; background: var(--slate-100); padding: 1rem; border-radius: 8px; text-align: center; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--slate-500);">Rastreabilidade</div>
+                    <div style="flex: 1; min-width: 150px; background: var(--slate-100); padding: 1rem; border-radius: 8px; text-align: center; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--slate-500);">Depuração</div>
+                </div>
+            </section>
 
-                <!-- 8. Boas Práticas -->
-                <section id="boas-praticas" class="mb-20 pt-24 -mt-16">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2 flex items-center gap-2">
-                        <i data-lucide="code" class="text-blue-600"></i> 8. Boas Práticas
-                    </h2>
-                    <div class="grid grid-cols-1 gap-4">
-                        <div class="flex gap-4 p-5 rounded-lg border border-slate-200 hover:border-blue-200 hover:bg-blue-50/30 transition-colors duration-200">
-                            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 shrink-0 font-bold text-sm">1</div>
-                            <div>
-                                <h5 class="font-bold text-slate-900 mb-1">Segurança de Credenciais</h5>
-                                <p class="text-sm text-slate-600 leading-relaxed">Mantenha a x-routing-key protegida e nunca a exponha em código client-side ou repositórios públicos.</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-4 p-5 rounded-lg border border-slate-200 hover:border-blue-200 hover:bg-blue-50/30 transition-colors duration-200">
-                            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 shrink-0 font-bold text-sm">2</div>
-                            <div>
-                                <h5 class="font-bold text-slate-900 mb-1">Tratamento de Erros</h5>
-                                <p class="text-sm text-slate-600 leading-relaxed">Implemente retentativas para erros de rede, mas respeite códigos de erro 4xx que indicam problemas no payload.</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-4 p-5 rounded-lg border border-slate-200 hover:border-blue-200 hover:bg-blue-50/30 transition-colors duration-200">
-                            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 shrink-0 font-bold text-sm">3</div>
-                            <div>
-                                <h5 class="font-bold text-slate-900 mb-1">Processamento de Webhooks</h5>
-                                <p class="text-sm text-slate-600 leading-relaxed">Sempre retorne 2xx rapidamente e processe a carga útil em segundo plano para não travar a conexão.</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-4 p-5 rounded-lg border border-slate-200 hover:border-blue-200 hover:bg-blue-50/30 transition-colors duration-200">
-                            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 shrink-0 font-bold text-sm">4</div>
-                            <div>
-                                <h5 class="font-bold text-slate-900 mb-1">Imutabilidade de IDs</h5>
-                                <p class="text-sm text-slate-600 leading-relaxed">Use external_id de forma consistente para evitar a criação de registros duplicados para o mesmo paciente.</p>
-                            </div>
+            <!-- 8. Boas Práticas -->
+            <section id="boas-praticas">
+                <h2>
+                    <svg class="txt-blue" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    8. Boas Práticas
+                </h2>
+                <div class="list-grid">
+                    <div class="list-item">
+                        <div class="item-number">1</div>
+                        <div class="item-content">
+                            <h5>Segurança de Credenciais</h5>
+                            <p>Mantenha a x-routing-key protegida e nunca a exponha em código client-side ou repositórios públicos.</p>
                         </div>
                     </div>
-                </section>
-
-                <!-- 9. Versionamento -->
-                <section id="versionamento" class="mb-20 pt-24 -mt-16">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2 flex items-center gap-2">
-                        <i data-lucide="git-branch" class="text-blue-600"></i> 9. Versionamento
-                    </h2>
-                    <div class="prose prose-slate text-slate-600 space-y-4">
-                        <p>Esta documentação refere-se à versão <strong>v1</strong> da API Nexus Med. O versionamento é mantido via path na URL base.</p>
-                        <ul class="list-disc ml-5 space-y-2">
-                            <li><strong>Compatibilidade:</strong> Mudanças incrementais não quebrarão integrações existentes.</li>
-                            <li><strong>Avisos:</strong> Novas versões serão comunicadas via newsletter técnica.</li>
-                        </ul>
-                    </div>
-                </section>
-
-                <!-- 10. Suporte -->
-                <section id="suporte" class="mb-20 pt-24 -mt-16">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2 flex items-center gap-2">
-                        <i data-lucide="help-circle" class="text-blue-600"></i> 10. Suporte
-                    </h2>
-                    <div class="bg-slate-900 text-white p-8 rounded-2xl shadow-2xl relative overflow-hidden">
-                        <div class="absolute top-0 right-0 p-10 text-slate-800 opacity-20">
-                            <i data-lucide="help-circle" style="width: 120px; height: 120px;"></i>
-                        </div>
-                        <div class="relative z-10">
-                            <h3 class="text-2xl font-bold mb-4">Suporte Técnico</h3>
-                            <p class="text-slate-300 mb-8 max-w-lg leading-relaxed">
-                                Para dúvidas técnicas utilize o painel do Nexus Med ou entre em contato com a equipe responsável pela integração.
-                            </p>
-                            <div class="flex flex-col sm:flex-row gap-4">
-                                <button class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg font-bold transition-all shadow-lg flex items-center justify-center gap-2">
-                                    Abrir Chamado <i data-lucide="external-link" class="w-4 h-4"></i>
-                                </button>
-                                <button class="bg-slate-800 hover:bg-slate-700 text-white px-6 py-3 rounded-lg font-bold border border-slate-700 transition-all flex items-center justify-center gap-2">
-                                    Painel de Controle
-                                </button>
-                            </div>
-                            <p class="mt-8 text-xs text-slate-400 italic">
-                                Ambiente de suporte disponível de segunda a sexta, das 09h às 18h.
-                            </p>
+                    <div class="list-item">
+                        <div class="item-number">2</div>
+                        <div class="item-content">
+                            <h5>Tratamento de Erros</h5>
+                            <p>Implemente retentativas para erros de rede, mas respeite códigos de erro 4xx que indicam problemas no payload.</p>
                         </div>
                     </div>
-                </section>
+                    <div class="list-item">
+                        <div class="item-number">3</div>
+                        <div class="item-content">
+                            <h5>Processamento de Webhooks</h5>
+                            <p>Sempre retorne 2xx rapidamente e processe a carga útil em segundo plano para não travar a conexão.</p>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="item-number">4</div>
+                        <div class="item-content">
+                            <h5>Imutabilidade de IDs</h5>
+                            <p>Use external_id de forma consistente para evitar a criação de registros duplicados para o mesmo paciente.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-                <footer class="mt-32 pt-12 border-t border-slate-200 text-center text-slate-400 text-sm">
-                    <p>&copy; <span id="current-year"></span> Nexus Med - Tecnologia para Saúde. Todos os direitos reservados.</p>
-                </footer>
-            </div>
-        </main>
-    </div>
+            <!-- 9. Versionamento -->
+            <section id="versionamento">
+                <h2>
+                    <svg class="txt-blue" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="6" y1="3" y2="15"></line><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><path d="M18 9a9 9 0 0 1-9 9"></path></svg>
+                    9. Versionamento
+                </h2>
+                <p>Esta é a primeira versão pública da API Nexus Med (v1). O versionamento é mantido desde o início para garantir compatibilidade futura e evitar mudanças incompatíveis à medida que novas funcionalidades forem adicionadas.</p>
+            </section>
+
+            <!-- Divider de Encerramento -->
+            <div class="support-divider"></div>
+
+            <!-- 10. Suporte -->
+            <section id="suporte">
+                <h2>
+                    <svg class="txt-blue" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" x2="12.01" y1="17" y2="17"></line></svg>
+                    10. Suporte
+                </h2>
+                <div class="support-card">
+                    <svg class="support-bg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" x2="12.01" y1="17" y2="17"></line></svg>
+                    <div class="relative z-10">
+                        <h3>Suporte Técnico</h3>
+                        <p>Para dúvidas técnicas, o suporte é realizado exclusivamente através de nossa equipe via e-mail.</p>
+                        <a href="mailto:nexusmed@iacomunica.com.br?subject=Suporte%20API%20Nexus%20Med" class="btn">
+                            Abrir Chamado
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
+                        </a>
+                        <p class="footer-note">Ambiente de suporte disponível de segunda a sexta, das 09h às 18h.</p>
+                    </div>
+                </div>
+            </section>
+
+            <footer>
+                <p>&copy; <span id="current-year"></span> Nexus Med - Tecnologia para Saúde. Todos os direitos reservados.</p>
+            </footer>
+        </div>
+    </main>
 
     <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
-
-        // Mobile Menu Logic
-        const mobileToggle = document.getElementById('mobile-menu-toggle');
+        // Menu Toggle Mobile
+        const menuToggle = document.getElementById('menu-toggle');
         const sidebar = document.getElementById('sidebar');
         const menuIcon = document.getElementById('menu-icon');
         const closeIcon = document.getElementById('close-icon');
 
-        mobileToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('-translate-x-full');
-            menuIcon.classList.toggle('hidden');
-            closeIcon.classList.toggle('hidden');
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            const isOpen = sidebar.classList.contains('open');
+            menuIcon.style.display = isOpen ? 'none' : 'block';
+            closeIcon.style.display = isOpen ? 'block' : 'none';
         });
 
         // Close sidebar when clicking links on mobile
         const sidebarLinks = document.querySelectorAll('.sidebar-link');
         sidebarLinks.forEach(link => {
             link.addEventListener('click', () => {
-                if (window.innerWidth < 768) {
-                    sidebar.classList.add('-translate-x-full');
-                    menuIcon.classList.remove('hidden');
-                    closeIcon.classList.add('hidden');
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('open');
+                    menuIcon.style.display = 'block';
+                    closeIcon.style.display = 'none';
                 }
             });
         });
 
-        // Scrollspy Logic
-        const sections = document.querySelectorAll('section[id]');
+        // Copy to Clipboard Function
+        function copyToClipboard(elementId, btn) {
+            const text = document.getElementById(elementId).innerText.trim();
+            navigator.clipboard.writeText(text).then(() => {
+                const originalIcon = btn.innerHTML;
+                btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>`;
+                setTimeout(() => {
+                    btn.innerHTML = originalIcon;
+                }, 2000);
+            }).catch(err => {
+                console.error('Falha ao copiar: ', err);
+            });
+        }
+
+        // Scrollspy
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.sidebar-link');
+
         window.addEventListener('scroll', () => {
             let current = "";
-            const scrollPos = window.scrollY + 120;
-
-            sections.forEach((section) => {
+            sections.forEach(section => {
                 const sectionTop = section.offsetTop;
-                if (scrollPos >= sectionTop) {
-                    current = section.getAttribute("id");
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= (sectionTop - 150)) {
+                    current = section.getAttribute('id');
                 }
             });
 
-            sidebarLinks.forEach((link) => {
-                link.classList.remove("active");
-                if (link.getAttribute("href").includes(current)) {
-                    link.classList.add("active");
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
                 }
             });
         });
@@ -527,6 +810,5 @@
         // Current Year
         document.getElementById('current-year').textContent = new Date().getFullYear();
     </script>
-<script type="module" src="/index.tsx"></script>
 </body>
 </html>
